@@ -81,7 +81,7 @@ const registerUser = asyncHandler(async (req, res) => {
      })
 
      const createdUser = await User.findById(user._id).select(
-          "-password -refreshtoken"
+          "-password -refreshToken"
      )
 
      if (!createdUser) {
@@ -118,7 +118,7 @@ const loginUser = asyncHandler(async (req, res) => {
      const isPasswordValid = await user.isPasswordCorrect(password)
 
      if (!isPasswordValid) {
-          throw new ApiError(404, "Password is incorrect")
+          throw new ApiError(401, "Password is incorrect")
      }
 
      const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id)
@@ -193,16 +193,16 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
                secure: true
           }
      
-          const {accessToken,newrefreshToken} = await generateAccessAndRefreshTokens(user._id)
+          const {accessToken,newRefreshToken} = await generateAccessAndRefreshTokens(user._id)
      
           return res
           .status(200)
           .cookie("accessToken",accessToken,options)
-          .cookie("refreshToken",newrefreshToken,options)
+          .cookie("refreshToken",newRefreshToken,options)
           .json(
                new ApiResponse(
                     200,
-                    {accessToken,refreshToken: newrefreshToken},
+                    {accessToken,refreshToken: newRefreshToken},
                     "Access token refreshed"
                )
           )
